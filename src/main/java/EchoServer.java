@@ -17,34 +17,30 @@ public class EchoServer {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.out.println("prot");
-            return;
-        }
-        int port=Integer.parseInt(args[0]);
-        new EchoServer(port).start();
+        new EchoServer(8888).start();
         System.out.println("server:run()");
     }
 
     public void start() throws Exception{
         final EchoServerHandler serverHandler=new EchoServerHandler();
-        //创建LOOPGROUP
+        //创建LOOPGROUP 进行事件处理
         EventLoopGroup group=new NioEventLoopGroup();
        try{
-           //创建SERVER
+           //使用启动器创建SERVER
            ServerBootstrap b=new ServerBootstrap();
-           b.group(group)
+           b.group(group)//绑定事件处理组
                    .channel(NioServerSocketChannel.class)
-                   .localAddress(new InetSocketAddress(port))
-                   .childHandler(new ChannelInitializer<SocketChannel>() {
+                   .localAddress(new InetSocketAddress(8888))//绑定端口
+                   .childHandler(new ChannelInitializer<SocketChannel>() {//添加一个子echo handeler到子通道去
                        @Override
                        public void initChannel(SocketChannel socketChannel) throws  Exception {
-                           socketChannel.pipeline().addLast(new EchoClientHandler());
+                           socketChannel.pipeline().addLast(serverHandler);//
                        };
                    });
-           ChannelFuture f=b.bind().sync();
+           ChannelFuture f=b.bind().sync();//异步的绑定服务器 直到绑定完成sync
+           f.channel().closeFuture().sync();//获取通道的关闭方法直到它完成
         } finally {
-            group.shutdownGracefully();
+            group.shutdownGracefully().sync();//关闭group 直到释放所有资源
         }
     }
 

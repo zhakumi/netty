@@ -36,7 +36,12 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     }
 
 
-
+    /**
+     * 异常处理
+     * @param ctx
+     * @param cause
+     * @throws Exception
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
