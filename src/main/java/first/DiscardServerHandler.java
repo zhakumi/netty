@@ -24,6 +24,7 @@ public class DiscardServerHandler  extends ChannelInboundHandlerAdapter {
         try {
             ByteBuf in = (ByteBuf) msg;
             System.out.print(in.toString(CharsetUtil.UTF_8));
+            ReferenceCountUtil.release(msg);
         } finally {
             /**
              * ByteBuf是一个引用计数对象，这个对象必须显示地调用release()方法来释放。

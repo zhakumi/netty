@@ -19,7 +19,7 @@ import java.util.Set;
  * Date:4/28/2018
  * Time:8:36 AM
  */
-public class translation {
+public class Translation {
     //OIO 阻塞
     private static void oio(int port) throws Exception{
         final ServerSocket socket=new ServerSocket(port);
